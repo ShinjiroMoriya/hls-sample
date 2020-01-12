@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset='UTF-8'>
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <meta http-equiv='X-UA-Compatible' content='ie=edge'>
+    <title>Document</title>
+    <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+    <style>
+        body {
+            margin: 0;
+        }
+        code {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="video">
+        <video id="video_smaple" controls></video>
+    </div>
+    <code>
+        ffmpeg -i video.mp4 -c:v copy -c:a copy -f hls -hls_time 9 -hls_playlist_type vod -hls_segment_filename "video%3d.ts" video.m3u8
+    </code>
+    <!--
+        ffmpeg -i video.mp4 video.m3u8
+        -i:変換ファイルを指定
+        -c:v copy,-c:a copy: Audio や Video のコーデックを元の mp4 ファイルのものをそのまま使うように指定（よっぽどがなければこのまま使う）
+        -f hls:動画のフォーマット
+        hls_time 9: 9 秒ごとに .ts ファイルに分割指定
+        -hls_playlist_type vod:オンデマンド配信
+        -hls_segment_filename "video%3d.ts":動画セグメントファイル名のフォーマットを指定
+    -->
+<script>
+if(Hls.isSupported()) {
+    var video = document.getElementById('video_smaple');
+    var hls = new Hls();
+    hls.loadSource('./videos/video.m3u8');
+    hls.attachMedia(video);
+}
+</script>
+</body>
+</html>
